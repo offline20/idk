@@ -1,0 +1,124 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    background-image: url("../images/bg.jpg");
+    background-color: #fbe9e7; /* Light peach */
+    position: relative; /* Allows absolute positioning of h1 */
+}
+
+h1 {
+    display: flex;
+    align-items: center;
+    justify-content: center; /* Center text horizontally */
+    background-color: #fbe9e7; /* Bright red-orange */
+    max-width: 140px;
+    border-radius: 20px;
+    padding: 10px;
+    position: absolute; /* Allows precise positioning */
+    top: 20px; /* Adjust top position as needed */
+    left: 50%; /* Center horizontally */
+    transform: translateX(-50%); /* Center horizontally */
+    
+}
+
+.container {
+    height: 500px;
+    width: 500px;
+    background-color: #ffecb3; /* Light yellow */
+    border-radius: 10px;
+    padding: 25px;
+    box-shadow: 0 0 10px #fbc02d; /* Darker yellow shadow */
+    border: 10px solid #fbc02d; /* Darker yellow border */
+}
+
+.cards,
+.card,
+.view {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.cards {
+    height: 100%;
+    width: 100%;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+
+.cards .card {
+    height: calc(100% / 4 - 10px);
+    width: calc(100% / 4 - 10px);
+    cursor: pointer;
+    position: relative;
+    perspective: 800px;
+    transform-style: preserve-3d;
+}
+
+.cards .card .view {
+    width: 100%;
+    height: 100%;
+    border-radius: 25px;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.616);
+    background-color: #ffab91; /* Light orange */
+    position: absolute;
+    transition: transform .25s linear;
+    backface-visibility: hidden;
+    pointer-events: none;
+    user-select: none;
+}
+
+.card .front-view span {
+    font-size: 40px;
+    color: #e64a19; /* Dark red-orange */
+}
+
+.card .front-view img {
+    width: 40px;
+}
+
+.card .back-view img {
+    max-width: 80px;
+}
+
+.card .back-view {
+    transform: rotateY(-180deg);
+}
+
+.card.flip .back-view {
+    transform: rotateY(0);
+}
+
+.card.flip .front-view {
+    transform: rotateY(180deg);
+}
+
+.card.shake {
+    animation: shake 0.35s ease-in-out;
+}
+
+@keyframes shake {
+    0%, 100% {
+        transform: translateX(0);
+    }
+    20% {
+        transform: translateX(-13px);
+    }
+    40% {
+        transform: translateX(13px);
+    }
+    60% {
+        transform: translateX(-8px);
+    }
+    80% {
+        transform: translateX(8px);
+    }
+}

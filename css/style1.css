@@ -1,0 +1,138 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  h1{
+    display: flex;
+    align-items: center;
+    margin-top: -320px;
+    margin-left: -400px;
+    background-color: palevioletred;
+    max-width: 120px;
+    border-radius: 2px;
+    padding: 10px;
+    border-spacing:2px ;
+  }
+  body {
+    /* display: flex; */
+    background: linear-gradient(135deg, #ffcc00, #FF0000); /* Orangey-pink background */
+    color: #000000; /* Black text color */
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+  
+    background-color: #cccccc;
+    /* max-height: 85%; */
+   
+  }
+  .card .front-view img{
+    width: 40px;
+  }
+  
+  .card .back-view img{
+    max-width: 80px;
+  }
+  
+  .container{
+    height: 600px;
+    width: 600px;
+    /* background: linear-gradient(to right, #fc6767, #ec008c); */
+   background-color: rgb(233, 240, 112);
+    border-radius: 10px;
+    padding: 25px;
+    box-shadow: 0 0 10px;
+    border: 10px;
+    display: grid;
+    grid-template-columns: repeat(2,auto);
+    display: flex;
+    flex-wrap: wrap;
+    /* margin-top: 50px; */
+    /* height: 85%; */
+  }
+  .cards,
+  .card,
+  .view{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    vertical-align: middle;
+  }
+  .cards{
+    height: 100%;
+    width: 100%;
+    flex-wrap: wrap;
+    justify-content: space-between;
+  }
+  .cards .card{
+    height: calc(100% / 4 - 10px);
+    width: calc(100% / 4 - 10px);
+    cursor: pointer;
+  
+    position: relative;
+    perspective: 800px;
+    transform-style: preserve-3d;
+  }
+  .cards .card .view{
+    width: 100%;
+    height: 100%;
+    /* background-color: #fff; */
+    border-radius: 25px;
+    /* border: 20px; */
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.616);
+    background-color: rgb(178, 221, 233);
+    /* background-image: url("../images/que_icon.svg"); */
+    position: absolute;
+    transition: transform .25s linear;
+    backface-visibility: hidden;
+    pointer-events: none;
+    user-select: none;
+  }
+  .card .front-view span{
+    font-size: 40px;
+    color: #6563ff;
+  }
+  .card .back-view{
+    /* display: none; */
+  
+    transform: rotateY(-180deg);
+  }
+  
+  /* .card:hover .back-view{
+    transform: rotateY(0);
+  }
+  .card:hover .front-view{
+    transform: rotateY(180deg);
+  } js 3*/
+  
+  
+  /*JS 3*/
+  .card.flip .back-view{
+    transform: rotateY(0);
+  }
+  .card.flip .front-view{
+    transform: rotateY(180deg);
+  }
+  /*JS 7.2*/
+  .card.shake{
+    animation: shake 0.35s ease-in-out;
+  }
+  @keyframes shake {
+    0%, 100%{
+        transform: translateX(0);
+    }
+    20%{
+        transform: translateX(-13px);
+    }
+    40%{
+        transform: translateX(13px);
+    }
+    60%{
+        transform: translateX(-8px);
+    }
+    80%{
+        transform: translateX(8px);
+    }
+  }

@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css" integrity="sha512-+4zCK9k+qNFUR5X+cKL9EIR+ZOhtIloNl9GIKS57V1MyNsYpYcUrUeQc9vNfzsWfV28IaLL3i96P9sdNyeRssA==" crossorigin="anonymous" />
+    <link rel="stylesheet" href="css/stylesheet.css">
+    <title>Memory Cards Game</title>
+    <style>
+        .settings-icon {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            cursor: pointer;
+            font-size: 40px; /* Increase icon size */
+            color: #fff; /* Change icon color if needed */
+        }
+
+        .settings-panel {
+            display: none; /* Initially hidden */
+            position: absolute;
+            top: 50px;
+            right: 10px; /* Adjusted position */
+            background-color: rgba(255, 255, 255, 0.8); /* Slightly transparent background */
+            padding: 20px; /* Increased padding */
+            border: 2px solid #ccc;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+            border-radius: 5px; /* Rounded corners */
+        }
+
+        .settings-panel label {
+            font-size: 18px; /* Larger label font size */
+            margin-bottom: 10px;
+            display: block; /* Make label a block element */
+        }
+
+        .settings-panel input[type="range"] {
+            width: 100%; /* Full width of the panel */
+            margin-top: 10px;
+        }
+
+        .audio-controls {
+            margin-top: 10px; /* Add some spacing */
+        }
+    </style>
+</head>
+<body style="background-image: url('images/bg.jpg'); background-size: cover; background-repeat: no-repeat;">
+    <div class="settings-icon">
+        <i class="fas fa-cog" id="settingsIcon"></i>
+    </div>
+
+    <div class="settings-panel" id="settingsPanel">
+        <label for="volume">Volume</label>
+        <input type="range" id="volume" min="0" max="100" value="50"> <!-- Set default value to 80 -->
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="logo-container">
+            <img src="images/logo.png" alt="Memory Card Game Logo" class="logo">
+        </div>
+        
+        <div class="level-buttons">
+            <button class="btn easy animate" onclick="location.href='html/level1.html'">Easy</button>
+            <button class="btn medium animate" onclick="location.href='html/level2.html'">Medium</button>
+            <button class="btn hard animate" onclick="location.href='html/level3.html'">Hard</button>
+        </div>
+        
+        <div class="how-to-play">
+            <h2>How to Play:</h2>
+            <p>In this game, a set of cards is laid out in front of you, and your goal is to match two identical cards to win. To earn stars:</p>
+            <div class="star-ratings">
+                <div class="star-rating">
+                    <img src="images/star1.png" alt="1 Star" class="star">
+                    <img src="images/star2.png" alt="2 Stars" class="star">
+                    <img src="images/star3.png" alt="3 Stars" class="star">
+                    <span>Complete in 30 seconds or less</span>
+                </div>
+                <div class="star-rating">
+                    <img src="images/star1.png" alt="1 Star" class="star">
+                    <img src="images/star2.png" alt="2 Stars" class="star">
+                    <span>Complete within 60 seconds</span>
+                </div>
+                <div class="star-rating">
+                    <img src="images/star1.png" alt="1 Star" class="star">
+                    <span>Complete in more than 1 minute</span>
+                </div>
+            </div>
+            <p>The game tracks your performance, showing statistics such as completion time and incorrect moves.</p>
+        </div>
+    </div>
+
+    <audio id="background-audio" src="audio/background.mp3" loop></audio>
+
+    <script>
+        // JavaScript to toggle the visibility of the settings panel
+        const settingsIcon = document.getElementById('settingsIcon');
+        const settingsPanel = document.getElementById('settingsPanel');
+
+        settingsIcon.addEventListener('click', () => {
+            settingsPanel.style.display = settingsPanel.style.display === 'none' || settingsPanel.style.display === '' ? 'block' : 'none';
+        });
+
+        // Volume control for the background audio
+        const audio = document.getElementById('background-audio');
+        const volumeControl = document.getElementById('volume');
+        
+        // Set initial volume
+        audio.volume = volumeControl.value / 100;
+
+        // Change volume on input
+        volumeControl.addEventListener('input', (e) => {
+            audio.volume = e.target.value / 100;
+        });
+
+        // Error handling for audio loading
+        audio.addEventListener('error', () => {
+            console.log('Error loading audio file:', audio.src);
+        });
+
+        // Play audio after the user interacts with the page
+        document.body.addEventListener('click', () => {
+            audio.play().catch(error => {
+                console.log('Playback prevented:', error);
+            });
+        });
+    </script>
+</body>
+</html>

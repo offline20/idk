@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Memory Card Game - Level 2</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap">
+    <script src="https://kit.fontawesome.com/2745e261bc.js"></script>
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #bf2020;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            background-image: url('../images/background.jpg'); /* Background image */
+            background-size: cover;
+            background-position: center;
+        }
+
+        h1 {
+            font-size: 2rem;
+            color: #000000;
+            background-color: #ffffff8f;
+            border: 2px solid rgb(0, 0, 0);
+            margin-bottom: 20px;
+        }
+
+        .stats {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid rgb(0, 0, 0);
+            background-color: #ffffffd9;
+            padding: 10px 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            color: #000000;
+        }
+
+        .stats p {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin: 0 20px;
+            display: flex;
+            align-items: center;
+        }
+
+        .stats img.icon {
+            width: 20px;
+            height: 20px;
+            margin-right: 8px;
+            vertical-align: middle;
+        }
+
+        .container {
+    display: grid;
+    grid-template-columns: repeat(4, 80px); /* reduced from 100px */
+    grid-gap: 15px;
+    padding: 15px;
+    background-color: #fefa04b3;
+    border: 2px solid rgb(0, 0, 0);
+    border-radius: 15px;
+    grid-template-rows: repeat(4, 120px); /* reduced from 150px */
+}
+
+.card {
+    width: 80px; /* reduced from 100px */
+    height: 120px; /* reduced from 150px */
+    position: relative;
+    perspective: 1000px;
+    cursor: pointer;
+    border: 2px solid rgb(0, 0, 0); /* Transparent orange border */
+    border-radius: 10px;
+
+}
+        .card .view {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            border-radius: 10px;
+        }
+
+        .card .front-view {
+            background-color: #e44023ec;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .card .back-view img {
+            width: 100%;
+            height: 100%;
+            border-radius: 10px;
+        }
+
+        .card.flipped .front-view {
+            transform: rotateY(180deg);
+        }
+
+        .card.flipped .back-view {
+            transform: rotateY(0deg);
+        }
+
+        .card .back-view {
+            transform: rotateY(180deg);
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+            z-index: 1000;
+            text-align: center;
+        }
+
+        .modal button {
+            background-color: #f31212;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 20px;
+            font-size: 1rem;
+            cursor: pointer;
+            margin: 10px;
+        }
+
+        .modal button:hover {
+            background-color: #ff0000;
+        }
+
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 500;
+        }
+
+        .settings-icon {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            font-size: 2rem;
+            cursor: pointer;
+            color: #ffffff;
+            z-index: 1001;
+        }
+
+        .settings-panel {
+            display: none;
+            position: fixed;
+            top: 50px; /* Adjust to ensure it is visible */
+            right: 10px;
+            background-color: #f6e01b98;
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+            z-index: 1002;
+            text-align: center;
+            width: 200px;
+            box-sizing: border-box;
+        }
+
+        .settings-panel label {
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        .settings-panel input[type="range"] {
+            width: 100%;
+        }
+
+        .stars img {
+            width: 25px;
+            height: 25px;
+            margin: 0 5px;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Audio Elements -->
+    <audio id="background-audio" src="../audio/background.mp3" autoplay loop></audio>
+    <audio id="level-audio" src="../audio/level.mp3"></audio>
+
+    <h1>Memory Card Game - Level 2</h1>
+
+    <div class="stats">
+        <p><img src="../images/time.gif" alt="timer icon" class="icon"> Time: <span id="timer">00:00</span></p>
+        <p><img src="../images/cross.png" alt="cross icon" class="icon"> Incorrect Moves: <span id="mistakes">0</span></p>
+    </div>
+
+    <div class="container" id="card-container">
+        <!-- Cards will be generated here by JavaScript -->
+    </div>
+
+    <div class="overlay" id="overlay"></div>
+    <div class="modal" id="modal">
+        <p>You Won!</p>
+        <p>Time: <span id="final-time"></span></p>
+        <p>Incorrect Moves: <span id="final-mistakes"></span></p>
+        <div class="stars" id="stars">
+            <!-- Stars will be inserted here by JavaScript -->
+        </div>
+        <button id="play-again">Play Again</button>
+        <button id="home">Home</button>
+    </div>
+
+    <div class="settings-icon" id="settings-icon">
+        <i class="fas fa-cog"></i> <!-- Settings icon -->
+    </div>
+
+    <div class="settings-panel" id="settings-panel">
+        <label for="volume-slider">Background Volume:</label>
+        <input type="range" id="volume-slider" min="0" max="1" step="0.01" value="0.5">
+    </div>
+
+    <script>
+        let timerElement = document.getElementById('timer');
+        let mistakesElement = document.getElementById('mistakes');
+        let finalTimeElement = document.getElementById('final-time');
+        let finalMistakesElement = document.getElementById('final-mistakes');
+        let starsContainer = document.getElementById('stars');
+        let overlay = document.getElementById('overlay');
+        let modal = document.getElementById('modal');
+        let playAgainButton = document.getElementById('play-again');
+        let homeButton = document.getElementById('home');
+        let backgroundAudio = document.getElementById('background-audio');
+        let levelAudio = document.getElementById('level-audio');
+        let settingsIcon = document.getElementById('settings-icon');
+        let settingsPanel = document.getElementById('settings-panel');
+        let volumeSlider = document.getElementById('volume-slider');
+        let seconds = 0;
+        let minutes = 0;
+        let timer;
+        let firstCard = null;
+        let secondCard = null;
+        let incorrectMoves = 0;
+        let lockBoard = false;
+
+        const cardImages = [
+            '../images/img-1.png',
+            '../images/img-2.png',
+            '../images/img-3.png',
+            '../images/img-4.png',
+            '../images/img-5.png',
+            '../images/img-6.png',
+            '../images/img-7.png',
+            '../images/img-8.png'
+        ];
+
+        function generateCards() {
+            const container = document.getElementById('card-container');
+            let cardArray = [...cardImages, ...cardImages]; // Duplicate the images for matching pairs
+            cardArray.sort(() => 0.5 - Math.random()); // Shuffle the array
+
+            cardArray.forEach(image => {
+                const card = document.createElement('div');
+                card.classList.add('card');
+
+                const frontView = document.createElement('div');
+                frontView.classList.add('view', 'front-view');
+                card.appendChild(frontView);
+
+                const backView = document.createElement('div');
+                backView.classList.add('view', 'back-view');
+                const img = document.createElement('img');
+                img.src = image;
+                img.alt = 'card-image';
+                backView.appendChild(img);
+                card.appendChild(backView);
+
+                card.addEventListener('click', flipCard);
+                container.appendChild(card);
+            });
+        }
+
+        function startTimer() {
+            timer = setInterval(() => {
+                seconds++;
+                if (seconds === 60) {
+                    seconds = 0;
+                    minutes++;
+                }
+                timerElement.textContent = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+            }, 1000);
+        }
+
+        function stopTimer() {
+            clearInterval(timer);
+        }
+
+        function showModal() {
+            finalTimeElement.textContent = timerElement.textContent;
+            finalMistakesElement.textContent = mistakesElement.textContent;
+            starsContainer.innerHTML = ''; // Clear previous stars
+
+            let starCount = 1;
+            if (minutes === 0 && seconds <= 30) {
+                starCount = 3;
+            } else if (minutes === 0 && seconds <= 60) {
+                starCount = 2;
+            } else {
+                starCount = 1;
+            }
+
+            for (let i = 0; i < starCount; i++) {
+                const img = document.createElement('img');
+                img.src = `../images/star${starCount}.png`;
+                starsContainer.appendChild(img);
+            }
+
+            overlay.style.display = 'block';
+            modal.style.display = 'block';
+            levelAudio.play();
+            backgroundAudio.pause(); // Pause background music when the level is completed
+        }
+
+        function flipCard() {
+            if (lockBoard) return;
+            this.classList.add('flipped');
+
+            if (!firstCard) {
+                firstCard = this;
+                return;
+            }
+
+            secondCard = this;
+            checkForMatch();
+        }
+
+        function checkForMatch() {
+            if (firstCard.innerHTML === secondCard.innerHTML) {
+                disableCards();
+            } else {
+                unflipCards();
+                incorrectMoves++;
+                mistakesElement.textContent = incorrectMoves;
+            }
+
+            if (document.querySelectorAll('.card.flipped').length === cardImages.length * 2) {
+                stopTimer();
+                setTimeout(showModal, 1000); // Show modal after a delay
+            }
+        }
+
+        function disableCards() {
+            firstCard.removeEventListener('click', flipCard);
+            secondCard.removeEventListener('click', flipCard);
+            resetBoard();
+        }
+
+        function unflipCards() {
+            lockBoard = true;
+            setTimeout(() => {
+                firstCard.classList.remove('flipped');
+                secondCard.classList.remove('flipped');
+                resetBoard();
+            }, 1000);
+        }
+
+        function resetBoard() {
+            [firstCard, secondCard] = [null, null];
+            lockBoard = false;
+        }
+
+        playAgainButton.addEventListener('click', () => {
+            window.location.reload(); // Reload the game for a new attempt
+        });
+
+        homeButton.addEventListener('click', () => {
+            window.location.href = 'https://offline20.github.io/card_game/'; // Redirect to the GitHub URL
+        });
+
+        settingsIcon.addEventListener('click', () => {
+            settingsPanel.style.display = settingsPanel.style.display === 'block' ? 'none' : 'block';
+        });
+
+        volumeSlider.addEventListener('input', () => {
+            backgroundAudio.volume = volumeSlider.value;
+        });
+
+        generateCards();
+        startTimer();
+    </script>
+</body>
+
+</html>
